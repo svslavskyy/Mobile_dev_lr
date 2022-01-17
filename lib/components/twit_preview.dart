@@ -52,8 +52,8 @@ class TwitPreview extends StatelessWidget {
     return Hero(
       tag: this.id,
       child: RawMaterialButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final res = await Navigator.of(context).push(
             MaterialPageRoute<void>(builder: (BuildContext context) {
               return Scaffold(
                 body: TwitPage(
@@ -63,6 +63,7 @@ class TwitPreview extends StatelessWidget {
               );
             }),
           );
+          print('twits: ${res as String}');
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

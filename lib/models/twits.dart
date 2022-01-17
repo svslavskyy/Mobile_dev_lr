@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../twitters.dart';
 
 class Twits extends ChangeNotifier {
-  final List<Map> _twitters = [];
+  late List<Map<String, dynamic>> _twitters = [];
 
   void update() {
     _twitters.clear();

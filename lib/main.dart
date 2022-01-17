@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lab1_flutter_dart_basics/pages/library_page.dart';
 import 'package:lab1_flutter_dart_basics/pages/likes_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './models/twits.dart';
 import './pages/main_page.dart';
 
@@ -15,14 +17,43 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late bool isDarkTheme = true;
+
+  void toggleTheme() {
+    setState(() {
+      isDarkTheme = !isDarkTheme;
+      SharedPreferences.getInstance().then((sp) {
+        sp.setBool('isDarkTheme', isDarkTheme);
+      });
+    });
+  }
+
+  _MyAppState() {
+    SharedPreferences.getInstance().then((sp) {
+      setState(() {
+        isDarkTheme = sp.getBool('isDarkTheme') ?? true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Provider.of<Twits>(context, listen: false).update();
     return MaterialApp(
       title: 'Twitter clone',
+      routes: {
+        '/': (context) => App(toggleTheme: toggleTheme),
+      },
       theme: ThemeData(
-        brightness: Brightness.dark,
+        brightness: isDarkTheme ? Brightness.dark : Brightness.light,
 
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -49,25 +80,26 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.dark,
-      home: App(),
+      themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
     );
   }
 }
 
 class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
+  final Function toggleTheme;
+
+  const App({Key? key, required this.toggleTheme}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AppState();
+  State<StatefulWidget> createState() => _AppState(toggleTheme);
 }
 
 class _AppState extends State<App> {
   int _selectedIndex = 0;
   int _totalLikeCount = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-
+  final Function toggleTheme;
+  _AppState(this.toggleTheme);
 
   void _openEndDrawer() {
     _scaffoldKey.currentState!.openEndDrawer();
@@ -94,9 +126,8 @@ class _AppState extends State<App> {
     Text('Not implemented'),
     LikesPage(
         totalLikeClicks: _totalLikeCount,
-        onClick: incrementTotalLikeCount
-    ),
-    Text('Not implemented'),
+        onClick: incrementTotalLikeCount),
+    LibraryPage(),
   ];
 
   @override
@@ -184,10 +215,9 @@ class _AppState extends State<App> {
               },
             ),
             ListTile(
-              title: const Text('Settings and configurations...'),
+              title: const Text('Change Theme'),
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('In development')));
+                toggleTheme();
                 Navigator.pop(context);
               },
             ),
