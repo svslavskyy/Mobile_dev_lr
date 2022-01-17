@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<List<Map<String, dynamic>>> getVideos() async {
+Future<List<Map<String, dynamic>>> getTwits() async {
   final response = await http.get(Uri.parse(
-      "https://raw.githubusercontent.com/JeyM1/flutter_labs_kpi/master/data/videos.json"));
+      "https://raw.githubusercontent.com/svslavskyy/Mobile_dev_lr/lr4/data/twits.json"));
   print('response ${response.body}');
 
   if (response.statusCode == 200) {

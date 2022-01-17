@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../twitters.dart';
+import 'package:lab1_flutter_dart_basics/db/getTwits.dart';
+
 
 class Twits extends ChangeNotifier {
   late List<Map<String, dynamic>> _twitters = [];
 
   void update() {
     _twitters.clear();
-    getTwits().forEach((element) {
-      _twitters.add(element);
+    getTwits().then((twits) {
+      _twitters = twits.map((element) {
+        element['isLiked'] = 'null';
+        return element;
+      }).toList();
+      notifyListeners();
     });
-    notifyListeners();
+
   }
 
   List getAll() {

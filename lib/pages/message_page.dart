@@ -106,13 +106,6 @@ class _LibraryPageState extends State<LibraryPage>
         AnimationController(duration: const Duration(seconds: 3), vsync: this);
     animation =
         CurvedAnimation(parent: controller, curve: Curves.easeInOutCubic);
-          // ..addStatusListener((status) {
-          //   if (status == AnimationStatus.completed) {
-          //     controller.reverse();
-          //   } else if (status == AnimationStatus.dismissed) {
-          //     controller.forward();
-          //   }
-          // });
     controller.forward();
   }
 
@@ -133,10 +126,9 @@ class _LibraryPageState extends State<LibraryPage>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AnimatedBarChart(animation: animation, data: {
-              "USA": 300,
-              "UK": 99,
-              "Ukraine": 250,
-              "Canada": 30
+              "Likes": 300,
+              "Retweet": 87,
+              "Comment": 212,
             })
           ],
         ),
